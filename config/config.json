@@ -1,0 +1,11 @@
+{
+  "keyword":"表1",
+  "action1":{
+    "file":"test.xlsx",
+    "data":{
+      "order":{
+        "pos":["A1:C1","E1"]
+      }
+    }
+  }
+}

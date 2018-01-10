@@ -1,0 +1,15 @@
+{
+  "name": "ExcelAutoTools",
+  "version": "0.1.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "xlsx": "latest",
+    "fs": "latest",
+    "process": "latest",
+    "child_process": "latest",
+    "electron": "latest"
+  }
+}
