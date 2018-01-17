@@ -1,19 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Hello World!</title>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <style type="text/css">
+        textarea{
+            -webkit-box-sizing:border-box;
+            -moz-box-sizing:border-box;
+            margin: fill;
+            width: 720px;
+            height: 240px;}
+    </style>
 </head>
 <body>
-<h1>Hello World!</h1>
-<!-- All of the Node.js APIs are available in this renderer process. -->
-We are using Node.js <script>document.write(process.versions.node)</script>,
-Chromium <script>document.write(process.versions.chrome)</script>,
-and Electron <script>document.write(process.versions.electron)</script>.
+<label>
+    <textarea id="id-inputBox" oninput="input(event)" onporpertychange="input(event)"></textarea>
+</label>
+<ul>
+    <li id="id-1">list1
+        <label>
+            <select>
+                <option value="volvo">Volvo</option>
+                <option value="saab">Saab</option>
+                <option value="opel">Opel</option>
+                <option value="audi">Audi</option>
+            </select>
+        </label>
+    </li>
+    <li id="id-2"></li>
+    <li id="id-3"></li>
+    <li id="id-4"></li>
+    <li id="id-5"></li>
+    <li id="id-6"></li>
+</ul>
 
 <script>
-    // You can also require other files to run in this process
-    require('./renderer.js')
+    require('./renderer.js');
+    function input(e) {
+        let inputbox = document.querySelector('#id-inputBox');
+        let reg = /[A-Z]+-[0-9]+.*$/gm;
+        let itemlist = inputbox.value.match(reg);
+
+        console.log(inputbox.value.match(reg));
+        // document.write(inputbox.value.match(reg));
+
+    }
 </script>
 </body>
 </html>
