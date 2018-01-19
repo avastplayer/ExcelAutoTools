@@ -1,14 +1,37 @@
 'use strict';
 const xlsx = require('xlsx');
 const fs = require('fs');
+const path = require('path');
 const process = require('process');
 const cp = require('child_process');
 
+const json = (path) => JSON.parse(fs.readFileSync(path));
 // const json = JSON.parse(fs.readFileSync("./config/config.json"));
 
-const json = (function (path) {
-    return JSON.parse(fs.readFileSync(path))
-})("./config/config.json");
+const matchKeyWord = function (str) {
+    const dir = "./config/";
+    let files = fs.readdirSync(dir);
+    let filesOrder = files;
+    let isMatch = false;
+    files.forEach(function (fileName) {
+        let fullPath = path.join(dir, fileName);
+        let keyword = json(fullPath)["keyword"];
+        if (str.match(new RegExp(keyword,"gm"))) {
+            isMatch = true;
+            let tmp = filesOrder[0];
+            filesOrder[0] = fileName;
+            filesOrder[fileName.key] = tmp;
+        }
+    });
+
+    if (!isMatch) {
+        files.forEach(function (fileName) {
+            filesOrder[fileName.key + 1] = files[fileName.key];
+        });
+        filesOrder[0] = "";
+    }
+    return filesOrder;
+};
 
 const action = function (json, o) {
     const path = './' + json[o]["file"];
@@ -162,7 +185,7 @@ const orderValue = function (worksheet, pos) {
         cellBelow = xlsx.utils.encode_cell({c: i, r: originalRow + 1});
         valueToExcel(worksheet, cellBelow, worksheet[cellAbove].v + 1);
     }
-}
+};
 
 const valueToExcel = function (worksheet, pos, value) {
     //扩充range
@@ -207,7 +230,45 @@ const getAddPos = function (worksheet, pos) {
     return xlsx.utils.encode_range(address2);
 };
 
-for (let o in json){
-    if (o === "keyword") continue;
-    action(json, o);
+// for (let o in json){
+//     if (o === "keyword") continue;
+//     action(json, o);
+// }
+
+const showForm = function () {
+    
 }
+
+function input(e) {
+    const inputBox = document.getElementById("id-formInput");
+    const regLine = /^[A-Z]+-[0-9]+.*$/gm;
+    const regId = /^[A-Z]+-[0-9]+/gm;
+    const formArray = inputBox.value.match(regLine);
+
+    if (formArray === null) {
+        return;
+    }
+
+    let dic = [];
+    for (let i = 0; i < formArray.length; i++) {
+        let id = formArray[i].match(regId);
+        dic[id] = formArray[i];
+    }
+    const element = document.getElementById("id-figure");
+    element.innerHTML = "";
+
+    for (let index in dic) {
+        let listItem = document.createElement("li");
+        let content = document.createTextNode(dic[index]);
+        let select = document.createElement("select");
+        matchKeyWord(dic[index]).forEach(function (form) {
+            let option = new Option(form, "value");
+            option.id = index;
+            select.options.add(option);
+        });
+        listItem.appendChild(content);
+        listItem.appendChild(select);
+        element.appendChild(listItem);
+    }
+}
+
